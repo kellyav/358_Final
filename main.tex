@@ -1,0 +1,253 @@
+\documentclass[15pt]{cup-pan}
+\usepackage[utf8]{inputenc}
+
+
+\usepackage{blindtext}
+\usepackage{listings}
+%\usepackage[margin=1in]{geometry}   % 1 inch margins all around
+\usepackage{indentfirst}
+\usepackage{fancyhdr,graphicx,amsmath,amssymb}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{tikzsymbols}
+\usepackage{textcomp}
+%\usepackage{titling}
+\usepackage{url}
+\usepackage{changepage}
+
+\title{\center{Predicting Malignant and Benign 
+
+Breast Cancer:
+Final Report}}
+
+\author[1]{Alexa Kelly}
+\author[2]{Ryan Folks}
+\author[3]{Lyndon Swarey}
+
+
+\affil[1]{Department of Mathematics and Statistics, James Madison University,  60 Bluestone Dr Harrisonburg, VA 22807. \url{kellyav@dukes.jmu.edu}}
+
+\affil[2]{Department of Mathematics and Statistics, James Madison University,  60 Bluestone Dr Harrisonburg, VA 22807. \url{folksr@dukes.jmu.edu}}
+
+\affil[3]{Department of Mathematics and Statistics, James Madison University,  60 Bluestone Dr Harrisonburg, VA 22807. \url{swareyl@dukes.jmu.edu}}
+
+
+%% Corresponding author
+
+
+%% Abbreviated author list for the running footer
+\runningauthor{Hello}
+
+\addbibresource{refs.bib}
+
+\begin{document}
+
+\maketitle
+
+\thispagestyle{empty}
+
+\tableofcontents
+
+\newpage 
+\clearpage
+\pagenumbering{arabic} 
+
+% restore one inch margins for non table of contents :
+\begin{adjustwidth*}{-1.5in}{-0in}
+
+\begin{abstract}
+% The  abstract should  consist  of the  motivation  for  your  paper  and  a  high-level explanation of the methodology you used/results obtained. 
+Our project will use Rmarkdown to determine the type of tumor a breast cancer patient has, malignant (M) or benign (B), by using data procured from biopsy samples of Wisconsin cancer patients in the early 1990s. We will use K-means for binning the continuous variables. The Chi-Squared test and Classification Tree will be used for feature selection. 
+
+
+Our project will then compare the results from K-NN, Naive Bayes, Logistic Regression, Linear Discriminant Analysis and Quadratic Discriminant Analysis to determine which machine learning algorithm is the best for predicting the type of cancer in a small dataset using all the variables and the variables selected using the Chi-square test and Classification Tree.
+
+
+\keywords{Machine learning, K-NN, Naive Bayes, Logistic Regression, Linear Discriminant Analysis, Quadratic Discriminant Analysis}
+\end{abstract}
+
+\bigskip
+
+\bigskip
+
+\section{Introduction}
+\label{sec:overview}
+
+% Include: 
+% Explain the problem and why it is important. 
+
+Determining if breast cancer is malignant or benign as  accurately as possible is of huge importance in the medical field and for patients being tested. 
+
+
+%•Discuss your motivation for pursuing this problem. Give some background if necessary. 
+ \smallskip
+
+%•Clearly  state  what  the  input  and  output  is.
+
+“The input to our algorithm is an {image, amplitude, patient age, rainfall measurements, grayscale video, etc.}. We then use a {SVM, regression tree, linear regression, etc.} to output a predicted {age, stock price, cancer type, music genre, etc.}.” 
+
+\bigskip
+
+
+\section{Related Work}
+
+% discuss their strengths and weaknesses
+% how they are similar to and differ from yourwork.
+% which approaches were clever/good?
+
+Most of the content posted on Kaggle in relation to this dataset are tutorials. These tutorials did use K-NN, Naive Bayes, Logistic Regression, Linear Discriminant Analysis and Quadratic Discriminant Analysis on the breast cancer dataset. They also used variable selection by eliminating highly correlated variables, selecting only the mean variables or a subset of the mean variables to be used as predictors. 
+
+\bigskip
+ 
+There are also a number of relevant papers linked on the UCI archive, but we could only find two papers (1, 2) available online. For the paper, Breast Cancer Diagnosis and Prognosis via Linear Programming, they used pooled RSA, least 1-norm error on recurs, and modified back-propagation. In the paper, Nuclear Feature Extraction For Breast Tumor Diagnosis, the team at the University of Wisconsin used a “multi-surface method tree,” which appears to be some type of support vector machine. It is tested with ten fold cross validation to achieve a 97\% accuracy using only three  predictor variables: mean texture, worst area, and worst smoothness. 
+
+\newpage 
+
+\section{Dataset and Features}
+
+Our dataset is hosted by the University of California Irvine, and was created by the University of Wisconsin’s Dr. William H. Wolberg, W. Nick Street, and Olvi L. Mangasarian. The dataset contains 32 attributes from 569 breast cancer patients in Wisconsin dating from around ~1992. Each datapoint is composed of the attributes of the nuclei of a cluster of cells obtained via fine needle aspiration and analyzed under a microscope.
+
+\bigskip
+
+\noindent An observation consists of an ID number, a diagnosis (M or B), mean, standard error, and “worst” (average of the three largest values) for the following:
+\begin{itemize}
+\item radius (average distances from center to the outside)
+\item texture (standard deviation of gray-scale values)
+\item perimeter
+\item area
+\item smoothness (variation in length of radius)
+\item compactness: $ \frac{perimeter^2}{area - 1.0}$ 
+\item concavity (severity of concave portions of the contour)
+\item concave points (number of concave portions of the contour)
+\item symmetry and fractal dimension (coastline approximation" - 1) for a cell nucleus. 
+\end{itemize}
+
+\bigskip
+
+\noindent The target variable diagnosis has 212 malignant and 357 benign. The dataset has no missing values.   
+
+\bigskip
+
+Our project is unique in that we will select only the statistically significant predictors from all the variables using a Chi-square test. K-NN, Naive Bayes, Logistic Regression, Linear Discriminant Analysis and Quadratic Discriminant Analysis will be run using these variables and the results from these two algorithms will be compared. % We also plan to experiment with balancing the dataset to see if we can improve the performance of these models.
+ 
+ 
+% Include in this section: 
+%  how  many  training/validation/test  examples  do  you have?  Is  there  any  preprocessing  you  did? 
+
+
+% What  about  normalization and standardization? 
+
+
+% How did you handle the missing values? (N/A)
+
+
+% Include a citation on where  you  obtained  your  dataset  from. 
+See the References and Bibliography section for the link to our UCI Machine Learning dataset. 
+
+%show  some examples from your dataset. You should also talk about the features you used.
+
+\newpage 
+
+\section{Methods}
+
+%Describe  your  learning  algorithms and  make  sure  to  include relevant mathematical notation. For each algorithm, give a short description (≈ 1 paragraph) of how it works. Additionally, if you are using a new algorithm,you may want to provide some details about it.
+
+We used k-means to bin the variables. The optimal k was found using the elbow method, while also maintaining the minimum number of observations required to run the 
+Chi-square test. 
+
+We considered both the elbow method and silhouette method in selecting the optimal k. 
+
+\subsection{Elbow Method} 
+The elbow method involves running the algorithm multiple times over a loop, with an increasing number of cluster choices and then plotting a clustering score as a function of the number of clusters. 
+
+% eventually include the plot for our data using the elbow method to visualize the method 
+
+\subsection{Silhouette method}
+The silhouette method is calculated using the mean intra-cluster distance and the mean nearest-cluster distance for each sample. 
+
+% eventually include the plot for our data using the Silhouette method to visualize the method ... 
+
+
+\bigskip
+
+\noindent We decided on pursuing the elbow method, because we saw that it created varying bins for the continuous variables. 
+
+
+
+\bigskip
+
+\newpage 
+
+\section{Discussion of Results and Experiments}
+
+%Did  you  do  cross-validation, if so, how many folds? 
+
+% Before you list your results, make sure to list and explain what your primary metrics  are:  accuracy,  precision,  AUC,  etc.For  results,  you  want  to  have  a mixture of tables and plots.
+
+% explain  whether  you  think  you  have  overfit  to  your  training  set and  what,  if  anything,  you  did  to  mitigate  that.  Make  sure  to  discuss  the figures/tables in your main text throughout this section. 
+
+\newpage 
+
+\section{Conclusion and Future Work}
+
+\bigskip
+
+\section{Contributions}
+
+\newpage 
+
+\section{References and Bibliography}
+
+\bigskip
+
+% Papers  describing  algorithms  that  you  used  which  were  not  covered  in class
+
+%Code or libraries you downloaded and used. This includes libraries such as scikit-learn, Matlab toolboxes, Tensorflow, etc.
+
+\begin{itemize}
+
+  \item 
+UCI. “Breast Cancer Wisconsin (Diagnostic) Data Set.” Kaggle, 25 Sept. 2016, 
+
+\url{www.kaggle.com/uciml/breast-cancer-wisconsin-data.}
+
+\bigskip
+
+  \item “Fine-Needle Aspiration.” Wikipedia, Wikimedia Foundation, 28 Mar. 2020,  \url{en.wikipedia.org/wiki/Fine-needle_aspiration.} 
+  
+  \bigskip
+  
+  \item Sarkar, Tirthajyoti. “Clustering Metrics Better than the Elbow-Method.” Medium, Towards Data Science, 6 Sept. 2019, \url{towardsdatascience.com/clustering-metrics-better-than-the-elbow-method-6926e1f723a6.}
+  
+\end{itemize}  
+
+\bigskip
+\bigskip
+
+\subsection{Other Journals}
+The other journals mentioned in \textbf{Related Work} section:
+
+\begin{itemize}
+
+  \item “Nuclear Feature Extraction For Breast Tumor Diagnosis.” CiteSeerX, \url{citeseer.ist.psu.edu/viewdoc/summary?doi=10.1.1.39.7236.} 
+ 
+  \bigskip
+
+  \item Wolberg, William H. “Breast Cancer Diagnosis and Prognosis Vis Linear Programming.” AAI Technical Report , University of Wisconsin Clinical Sciences Center, 25 Jan. 1994, \url{www.aaai.org/Papers/Symposia/Spring/1994/SS-94-01/SS94-01-019.pdf.} 
+  
+\end{itemize}
+
+\bigskip
+
+\subsection{Important Links}
+
+\subsubsection{Github Repository}
+  
+\url{https://github.com/kellyav/machinelearningfinal} 
+
+
+\printbibliography
+
+
+\end{adjustwidth*}
+\end{document}
