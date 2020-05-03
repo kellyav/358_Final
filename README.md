@@ -9,4 +9,5 @@ This is the final report document. When it is run, a clear cut 6 page scientific
 ## cup-pan 
 cup-pan is a journal document class. Must be downloaded as is, and uploaded to overleaf in order to make any edits on the main document 
 
-##
+## refs.bib
+This file is the bibliography for the report. 
